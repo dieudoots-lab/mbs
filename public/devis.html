@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Devis · Modern Business School</title>
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Poppins, Arial, sans-serif; color: #1B2240; background: #E9ECF5; font-size: 13px; }
+  .bar { max-width: 794px; margin: 16px auto; display: flex; justify-content: flex-end; gap: 8px; padding: 0 10px; }
+  .bar button, .bar a { font: inherit; font-weight: 600; padding: 9px 16px; border-radius: 999px; border: 0; background: #04195E; color: #fff; cursor: pointer; text-decoration: none; }
+  .page { width: 794px; min-height: 1123px; max-width: 100%; margin: 0 auto 30px; background: #fff; position: relative; overflow: hidden; padding: 56px 56px 120px; box-shadow: 0 20px 50px -30px rgba(4,25,94,.5); }
+  .page::before { content: ''; position: absolute; left: 0; top: 0; right: 0; height: 8px; background: linear-gradient(90deg, #04195E 70%, #FFBF31 70%); }
+  .m { position: absolute; right: -80px; bottom: -60px; width: 380px; opacity: .06; }
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+  header img { height: 60px; }
+  .meta { text-align: right; color: #5C6380; }
+  .meta h1 { color: #04195E; font-size: 28px; margin: 0 0 4px; }
+  .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 36px 0 28px; }
+  .parties div { background: #F4F6FB; border-radius: 12px; padding: 16px; }
+  .parties h3 { margin: 0 0 6px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #E9A70F; }
+  .parties b { color: #04195E; font-size: 15px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th { background: #04195E; color: #fff; text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+  th:last-child, td:last-child { text-align: right; }
+  td { padding: 11px 12px; border-bottom: 1px solid #E3E6F0; vertical-align: top; }
+  td small { color: #5C6380; display: block; }
+  .totaux { margin-left: auto; width: 300px; margin-top: 16px; }
+  .totaux div { display: flex; justify-content: space-between; padding: 7px 12px; }
+  .totaux .ttc { background: #FFBF31; color: #04195E; font-weight: 800; font-size: 16px; border-radius: 10px; margin-top: 6px; }
+  .notes { margin-top: 30px; color: #5C6380; font-size: 12px; line-height: 1.7; }
+  .notes h3 { color: #04195E; font-size: 13px; margin: 0 0 4px; }
+  footer { position: absolute; left: 56px; right: 56px; bottom: 36px; border-top: 1px solid #E3E6F0; padding-top: 12px; font-size: 11px; color: #5C6380; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  @media print { body { background: #fff; } .bar { display: none; } .page { box-shadow: none; margin: 0; } }
+</style>
+</head>
+<body>
+<div class="bar"><a href="/admin#/entreprises">← Retour</a><button onclick="window.print()">Imprimer / enregistrer en PDF</button></div>
+<div class="page" id="page"><p>Chargement...</p></div>
+<script>
+(async () => {
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const money = (n) => Number(n || 0).toLocaleString('fr-FR', { maximumFractionDigits: 2 }) + ' $';
+  const id = location.pathname.split('/').pop();
+  const [list, meR] = await Promise.all([fetch('/api/admin/entreprises'), fetch('/api/admin/me')]);
+  if (!list.ok) { document.getElementById('page').innerHTML = '<p>Connectez-vous à l\'espace équipe pour voir ce devis.</p>'; return; }
+  const { entreprises } = await list.json();
+  const { ecole } = await meR.json();
+  const e = entreprises.find((x) => x.id === id);
+  if (!e) { document.getElementById('page').innerHTML = '<p>Devis introuvable.</p>'; return; }
+  const dv = e.devis_detail;
+  const num = 'MBS-D-' + e.created_at.slice(0, 10).replace(/-/g, '') + '-' + e.id.slice(-4).toUpperCase();
+  const valid = new Date(Date.now() + 30 * 86400000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.title = `Devis ${num} · ${e.societe}`;
+  document.getElementById('page').innerHTML = `
+    <img class="m" src="/img/icon.png" alt="">
+    <header><img src="/img/logo-light-bg.png" alt="Modern Business School"><div class="meta"><h1>Devis</h1>N° ${num}<br>Date : ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Valable jusqu'au ${valid}</div></header>
+    <div class="parties">
+      <div><h3>Émetteur</h3><b>${esc(ecole.nom)}</b><br>Porté par ${esc(ecole.societe)}<br>${esc(ecole.adresse)}<br>${esc(ecole.telephone1)} · ${esc(ecole.email)}</div>
+      <div><h3>Client</h3><b>${esc(e.societe)}</b><br>${esc(e.contact || '')}${e.fonction ? ', ' + esc(e.fonction) : ''}<br>${esc(e.telephone || '')}<br>${esc(e.email || '')}</div>
+    </div>
+    <p><b style="color:#04195E">Objet :</b> Programme de renforcement de capacité · ${dv.participants} participant(s) · ${dv.jours} jour(s) par module · format ${esc(e.format || 'présentiel')}${e.periode ? ' · période : ' + esc(e.periode) : ''}</p>
+    <table><thead><tr><th>Désignation</th><th>Qté</th><th>Prix unitaire HT</th><th>Total HT</th></tr></thead><tbody>
+      ${dv.lignes.map((l) => `<tr><td><b>${esc(l.titre)}</b><small>Frais de consultation, conception et animation (${dv.jours} jour${dv.jours > 1 ? 's' : ''})</small></td><td>1</td><td>${money(l.consultation)}</td><td>${money(l.consultation)}</td></tr>
+        <tr><td>${esc(l.titre)} · frais par participant<small>Supports, exercices pratiques, certificat MBS vérifiable</small></td><td>${l.participants}</td><td>${money(l.prix_participant)}</td><td>${money(l.total_participants)}</td></tr>`).join('')}
+    </tbody></table>
+    <div class="totaux"><div><span>Total HT</span><b>${money(dv.ht)}</b></div><div><span>TVA ${dv.tva_pct} %</span><span>${money(dv.tva)}</span></div><div class="ttc"><span>Total TTC</span><span>${money(dv.ttc)}</span></div></div>
+    <div class="notes"><h3>Conditions</h3>HORECA (salle, restauration, pauses) à la charge du client. Programme ajustable après un entretien de cadrage. Acompte de 50 % à la commande, solde à la fin de la formation. Les participants reçoivent un certificat Modern Business School vérifiable en ligne par QR code.${e.objectifs ? `<h3 style="margin-top:14px">Objectifs exprimés</h3>${esc(e.objectifs)}` : ''}</div>
+    <footer><span>${esc(ecole.nom)} · ${esc(ecole.baseline)}</span><span>${esc(ecole.site)} · ${esc(ecole.telephone1)} / ${esc(ecole.telephone2)}</span></footer>`;
+})();
+</script>
+</body>
+</html>

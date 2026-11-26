@@ -1,0 +1,19 @@
+{
+  "name": "mbs-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plateforme d'inscription, CRM et automatisation de Modern Business School",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning --watch server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
+    "pg": "^8.23.1"
+  }
+}
