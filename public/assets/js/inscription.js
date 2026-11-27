@@ -22,7 +22,7 @@
 
   // ------------------------------------------------ cadre
   app.innerHTML = `<div class="funnel">
-    <div class="funnel-top"><div class="wrap"><a href="/" aria-label="Accueil"><img src="/img/logo-light-bg.png" alt="Modern Business School"></a><span class="count" id="count"></span></div><div class="funnel-bar" role="progressbar" aria-valuemin="1" aria-valuemax="${TOTAL}" id="bar"><span></span></div></div>
+    <div class="funnel-top"><div class="wrap"><a href="/" aria-label="Accueil"><img src="/img/logo-dark-bg.png" alt="Modern Business School"></a><span class="count" id="count"></span></div><div class="funnel-bar" role="progressbar" aria-valuemin="1" aria-valuemax="${TOTAL}" id="bar"><span></span></div></div>
     <div class="funnel-body"><div id="stage" style="width:100%;display:flex;justify-content:center"></div></div>
     <div class="saved" id="saved"><i class="fa-solid fa-check"></i> Étape enregistrée</div>
   </div>`;
@@ -110,7 +110,7 @@
         <p class="sub">Inscription gratuite en deux minutes. Chaque étape est enregistrée : si vous êtes interrompu, vous reprendrez exactement où vous étiez.</p>
         <div class="session-pick">${list.map((x) => `<button type="button" class="session-opt ${x.id === chosenSession ? 'selected' : ''}" data-id="${x.id}" ${x.complet ? 'disabled' : ''}>
           <img src="${esc(x.formation_image)}" alt="">
-          <span><b>${esc(x.formation_titre)}</b><small>${esc(x.dates)} · ${esc(x.horaire || '')}</small><br><small style="color:${x.tension ? '#C46A00' : 'var(--vert)'};font-weight:600">${x.complet ? 'Complet' : `${x.restantes} places restantes`}</small></span>
+          <span><b>${esc(x.formation_titre)}</b><small>${esc(x.dates)} · ${esc(x.horaire || '')}</small><br><small style="color:${x.tension ? 'var(--orange)' : 'var(--vert)'};font-weight:600">${x.complet ? 'Complet' : `${x.restantes} places restantes`}</small></span>
           <span class="p">${money(x.prix_actuel, cat.tarifs.devise)}<br><small>${esc(cat.tarifs.mention)}</small></span></button>`).join('')}</div>
         ${errorBox}
         <div class="row"><button class="btn" type="submit">Commencer <i class="fa-solid fa-arrow-right"></i></button>${enter}</div>

@@ -26,7 +26,7 @@ route('GET', '/formations/:slug', async (req, res, { params }) => {
   page ? html(res, page) : html(res, await notFoundPage(), 404);
 });
 route('GET', '/entreprises', async (req, res) => html(res, await entreprisesPage()));
-route('GET', '/inscription', async (req, res) => html(res, await appShell({ title: 'Inscription', script: '/assets/js/inscription.js?v=1', description: 'Inscription en deux minutes à une formation Modern Business School.', bare: true })));
+route('GET', '/inscription', async (req, res) => html(res, await appShell({ title: 'Inscription', script: '/assets/js/inscription.js?v=2', description: 'Inscription en deux minutes à une formation Modern Business School.', bare: true })));
 route('GET', '/espace', async (req, res) => html(res, await appShell({ title: 'Mon espace', script: '/assets/js/espace.js?v=1' })));
 route('GET', '/verifier', async (req, res) => html(res, await verifierPage()));
 route('GET', '/verifier/:code', async (req, res, { params }) => html(res, await verifierPage(params.code)));

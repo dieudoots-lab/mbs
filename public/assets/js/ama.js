@@ -8,7 +8,7 @@
 
   const root = document.createElement('div');
   root.innerHTML = `
-  <button class="ama-bubble" id="ama-bubble" aria-label="Discuter avec Ama, l'assistante virtuelle" aria-expanded="false" aria-controls="ama-panel"><img src="/img/m-jaune.png" alt=""><span class="dot"></span></button>
+  <button class="ama-bubble" id="ama-bubble" aria-label="Discuter avec Ama, l'assistante virtuelle" aria-expanded="false" aria-controls="ama-panel"><img src="/img/icon.png" alt=""><span class="dot"></span></button>
   <div class="ama-panel" id="ama-panel" role="dialog" aria-label="Discussion avec l'assistante">
     <div class="ama-head"><div class="av"><img src="/img/icon.png" alt=""></div><div><b id="ama-nom">Ama</b><small>Assistante virtuelle MBS · répond en quelques secondes</small></div><button id="ama-close" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="ama-msgs" id="ama-msgs"></div>
