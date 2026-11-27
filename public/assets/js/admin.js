@@ -121,7 +121,7 @@
     root.innerHTML = `<div class="auth"><div class="side"><img class="m" src="/img/m-jaune.png" alt=""><h1>Espace équipe</h1><p>Inscriptions, paiements, entreprises, relances et certificats de Modern Business School, au même endroit.</p></div><div class="form">${inner}</div></div>`;
   }
   function loginView() {
-    authFrame(`<form id="f"><img src="/img/logo-light-bg.png" alt="MBS"><h1>Connexion</h1><p class="muted">Réservé à l'équipe MBS.</p>
+    authFrame(`<form id="f"><img src="/img/logo-dark-bg.png" alt="MBS"><h1>Connexion</h1><p class="muted">Réservé à l'équipe MBS.</p>
       <div class="field"><label>Email</label><input class="input" name="email" type="email" autocomplete="username" required></div>
       <div class="field"><label>Mot de passe</label><input class="input" name="password" type="password" autocomplete="current-password" required></div>
       <p class="err" id="e"></p><button class="btn y" style="width:100%;justify-content:center;padding:12px">Entrer</button>
@@ -132,7 +132,7 @@
     };
   }
   function setupView() {
-    authFrame(`<form id="f"><img src="/img/logo-light-bg.png" alt="MBS"><h1>Bienvenue 👋</h1><p class="muted">Créez le compte administrateur principal de la plateforme.</p>
+    authFrame(`<form id="f"><img src="/img/logo-dark-bg.png" alt="MBS"><h1>Bienvenue 👋</h1><p class="muted">Créez le compte administrateur principal de la plateforme.</p>
       <div class="field"><label>Votre nom</label><input class="input" name="nom" required></div>
       <div class="field"><label>Email</label><input class="input" name="email" type="email" required></div>
       <div class="field"><label>Mot de passe (8 caractères minimum)</label><input class="input" name="password" type="password" minlength="8" autocomplete="new-password" required></div>
@@ -200,7 +200,7 @@
       <div class="grid g-2-1" style="margin-bottom:16px">
         <div class="card"><div class="card-head"><h2>Activité quotidienne</h2></div>
           <div class="bars">${x.serie.map((s) => `<div data-tip="${d(s.jour, { day: 'numeric', month: 'short' })} · ${s.leads} dossiers, ${s.completes} inscrits"><span class="a" style="height:${((s.leads - s.completes) / maxSerie) * 100}%"></span><span class="b" style="height:${(s.completes / maxSerie) * 100}%"></span></div>`).join('')}</div>
-          <div class="legend"><span><i style="background:var(--jaune)"></i>Inscriptions terminées</span><span><i style="background:var(--bleu-pale)"></i>Dossiers en cours</span></div>
+          <div class="legend"><span><i style="background:var(--jaune)"></i>Inscriptions terminées</span><span><i style="background:var(--surface-3)"></i>Dossiers en cours</span></div>
         </div>
         <div class="card"><div class="card-head"><h2>Entreprises</h2><a href="#/entreprises" class="small">Pipeline →</a></div>
           <div class="kpi" style="border:0;padding:0"><small>Pipeline en cours</small><b>${money(k.b2b_pipeline)}</b><span>${k.b2b_n} demande(s) sur la période</span></div>
@@ -217,7 +217,7 @@
             <div class="fill ${s.restantes === 0 ? 'full' : ''}" style="margin:6px 0 4px"><span style="width:${Math.min(100, (s.prises / s.capacite) * 100)}%"></span></div>
             <div class="small muted">${s.prises}/${s.capacite} inscrits · ${s.commencees - s.prises} en cours · ${money(s.encaisse)} encaissés</div></div>`).join('') : '<div class="empty">Aucune session programmée.</div>'}
           <h3 style="margin-top:18px">Sources</h3>
-          ${x.sources.map((s) => `<div class="hbar"><span>${esc(L.source[s.source] || s.source)}</span><div class="fill"><span style="width:${(s.n / maxSrc) * 100}%;background:var(--bleu)"></span></div><b>${s.n}</b></div>`).join('') || '<p class="muted small">Pas encore de données.</p>'}
+          ${x.sources.map((s) => `<div class="hbar"><span>${esc(L.source[s.source] || s.source)}</span><div class="fill"><span style="width:${(s.n / maxSrc) * 100}%;background:var(--jaune)"></span></div><b>${s.n}</b></div>`).join('') || '<p class="muted small">Pas encore de données.</p>'}
         </div>
       </div>
       <div class="grid g2">
@@ -259,6 +259,7 @@
     };
     async function load() {
       const x = await GET('/api/admin/leads?' + params());
+      if (!$('#count')) return; // on a quitte la liste pendant le chargement
       $('#count').textContent = `${x.total} dossier(s)${x.total > 500 ? ' · 500 affichés' : ''}`;
       $('#rows').innerHTML = x.leads.map((l) => `<tr class="click" data-id="${l.id}">
         <td><span class="temp ${l.temperature}" title="${L.temp[l.temperature]}"></span></td>
@@ -492,7 +493,7 @@
       $$('[data-id]', box).forEach((r) => r.onclick = () => formationModal(c, c.formations.find((f) => f.id === r.dataset.id)));
       $('#add').onclick = () => formationModal(c);
     } else {
-      box.innerHTML = `<div class="grid g4">${c.formateurs.map((f) => `<div class="card click" data-id="${f.id}" style="cursor:pointer;text-align:center"><img src="${esc(f.photo || '/img/icon.png')}" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:top;margin:0 auto 10px"><h3>${esc(f.nom)}</h3><div class="small muted">${esc(f.titre || '')}</div>${f.actif ? '' : pill('masqué', 'gris')}</div>`).join('')}</div>`;
+      box.innerHTML = `<div class="grid g4">${c.formateurs.map((f) => `<div class="card click" data-id="${f.id}" style="cursor:pointer;text-align:center"><img src="${esc(f.photo || '/img/m-jaune.png')}" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:top;margin:0 auto 10px"><h3>${esc(f.nom)}</h3><div class="small muted">${esc(f.titre || '')}</div>${f.actif ? '' : pill('masqué', 'gris')}</div>`).join('')}</div>`;
       $$('[data-id]', box).forEach((r) => r.onclick = () => formateurModal(c.formateurs.find((f) => f.id === r.dataset.id)));
       $('#add').onclick = () => formateurModal();
     }
