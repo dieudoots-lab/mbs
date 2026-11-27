@@ -1,8 +1,24 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
-    "api/index.js": { "includeFiles": "{public,lib}/**", "maxDuration": 60 }
+    "api/index.js": {
+      "includeFiles": "{public,lib}/**",
+      "maxDuration": 60
+    }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }],
-  "crons": [{ "path": "/api/cron/relances", "schedule": "0 8 * * *" }]
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/relances",
+      "schedule": "0 8 * * *"
+    }
+  ],
+  "regions": [
+    "fra1"
+  ]
 }
