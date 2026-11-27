@@ -8,7 +8,7 @@ import { registerPublic } from './lib/api-public.js';
 import { registerAdmin } from './lib/api-admin.js';
 import { send, HttpError, parseCookies, setCookie, id } from './lib/util.js';
 import { homePage, formationPage, entreprisesPage, appShell, verifierPage, certificatPage, notFoundPage } from './lib/pages.js';
-import { q, ready, refreshSettings } from './lib/db.js';
+import { q, ensureReady, refreshSettings } from './lib/db.js';
 import { runAutomation } from './lib/automation.js';
 
 const PUBLIC = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public');
@@ -73,7 +73,12 @@ function serveStatic(req, res, pathname) {
 }
 
 export async function handler(req, res) {
-  await ready;
+  try {
+    await ensureReady();
+  } catch (e) {
+    console.error('[demarrage] base injoignable', e.message);
+    return send(res, 503, req.url.startsWith('/api/') ? { error: 'Service momentanément indisponible. Réessayez dans un instant.' } : 'Le site redémarre, réessayez dans quelques secondes.', { 'Retry-After': '5' });
+  }
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
